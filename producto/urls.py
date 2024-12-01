@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
-from .api import CategoriaViewSet, CategoriaColorViewSet, MarcaViewSet, UsuarioViewSet, BusquedaViewSet
+from .api import CategoriaViewSet, CategoriaColorViewSet, MarcaViewSet, UsuarioViewSet, BusquedaViewSet, ProductoViewSet,TallaViewSet,ColorViewSet,NotaIngresoViewSet
 
 # Crear un router y registrar las rutas
 router = DefaultRouter()
@@ -9,6 +9,10 @@ router.register('categorias-colores', CategoriaColorViewSet, basename='categoria
 router.register('marcas', MarcaViewSet, basename='marca')
 router.register('usuarios', UsuarioViewSet, basename='usuario')
 router.register('busquedas', BusquedaViewSet, basename='busqueda')
+router.register('productos', ProductoViewSet, basename='producto')
+router.register('tallas', TallaViewSet, basename='talla')
+router.register('colores', ColorViewSet, basename='color')
+router.register('notas-ingreso', NotaIngresoViewSet, basename='notaingreso')
 
 # Incluir las rutas en el módulo
 urlpatterns = [

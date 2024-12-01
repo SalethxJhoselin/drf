@@ -1,11 +1,15 @@
 from rest_framework import viewsets, permissions
-from .models import Categoria, CategoriaColor, Marca, Usuario, Busqueda
+from .models import Categoria, CategoriaColor, Marca, Usuario, Busqueda,Producto, Talla, Color, NotaIngreso
 from .serializers import (
     CategoriaSerializer,
     CategoriaColorSerializer,
     MarcaSerializer,
     UsuarioSerializer,
-    BusquedaSerializer
+    BusquedaSerializer,
+    ProductoSerializer,
+    TallaSerializer,
+    ColorSerializer,
+    NotaIngresoSerializer
 )
 
 # ViewSet para Categoría
@@ -37,3 +41,27 @@ class BusquedaViewSet(viewsets.ModelViewSet):
     queryset = Busqueda.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = BusquedaSerializer
+
+# ViewSet para Producto
+class ProductoViewSet(viewsets.ModelViewSet):
+    queryset = Producto.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ProductoSerializer
+
+# ViewSet para Talla
+class TallaViewSet(viewsets.ModelViewSet):
+    queryset = Talla.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = TallaSerializer
+
+# ViewSet para Color
+class ColorViewSet(viewsets.ModelViewSet):
+    queryset = Color.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = ColorSerializer
+
+# ViewSet para NotaIngreso
+class NotaIngresoViewSet(viewsets.ModelViewSet):
+    queryset = NotaIngreso.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = NotaIngresoSerializer

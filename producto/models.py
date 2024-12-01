@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save,post_save
 from django.dispatch import receiver
 
 
@@ -111,3 +111,28 @@ class Busqueda(models.Model):
 
     def __str__(self):
         return f"{self.usuario.nombre} buscó {self.producto.nombre} el {self.fecha_busqueda}"
+
+# Modelo Nota de Ingreso
+class NotaIngreso(models.Model):
+    fecha = models.DateTimeField(auto_now_add=True)
+    observacion = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Nota de Ingreso #{self.id} - {self.fecha}"
+
+# Modelo DetalleNotaIngreso
+class DetalleNotaIngreso(models.Model):
+    nota_ingreso = models.ForeignKey(NotaIngreso, on_delete=models.CASCADE, related_name='detalles')
+    producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.cantidad} x {self.producto.nombre}"
+
+# Señal para actualizar el stock del producto al registrar una Nota de Ingreso
+@receiver(post_save, sender=DetalleNotaIngreso)
+def actualizar_stock(sender, instance, created, **kwargs):
+    if created:
+        producto = instance.producto
+        producto.stock += instance.cantidad
+        producto.save()
