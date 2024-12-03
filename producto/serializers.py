@@ -54,23 +54,28 @@ class ColorSerializer(serializers.ModelSerializer):
 class DetalleNotaIngresoSerializer(serializers.ModelSerializer):
     class Meta:
         model = DetalleNotaIngreso
-        fields = '__all__'
+        fields = ['producto', 'cantidad']
 
 # Serializador para NotaIngreso
 class NotaIngresoSerializer(serializers.ModelSerializer):
-    detalles = DetalleNotaIngresoSerializer(many=True)
+    detalles = DetalleNotaIngresoSerializer(many=True)  # Detalles serán una lista
 
     class Meta:
         model = NotaIngreso
-        fields = '__all__'
+        fields = ['observacion', 'detalles']
 
     def create(self, validated_data):
         detalles_data = validated_data.pop('detalles')
+
+        # Crear la NotaIngreso
         nota_ingreso = NotaIngreso.objects.create(**validated_data)
+
+        # Crear los Detalles de la NotaIngreso
         for detalle_data in detalles_data:
             DetalleNotaIngreso.objects.create(nota_ingreso=nota_ingreso, **detalle_data)
+
         return nota_ingreso
-    
+
 # Serializador para Nota de Venta
 class NotaVentaSerializer(serializers.ModelSerializer):
     class Meta:
