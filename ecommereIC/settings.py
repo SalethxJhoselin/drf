@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     'producto',
+    'corsheaders',
     'rest_framework'
 ]
 
@@ -50,7 +51,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
+
+# CORS settings
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',  # URL de tu frontend en desarrollo
+]
+#CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'ecommereIC.urls'
 
