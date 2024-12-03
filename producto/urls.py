@@ -1,18 +1,22 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
-from .api import CategoriaViewSet, CategoriaColorViewSet, MarcaViewSet, UsuarioViewSet, BusquedaViewSet, ProductoViewSet,TallaViewSet,ColorViewSet,NotaIngresoViewSet
+from .api import CategoriaViewSet, CategoriaColorViewSet, MarcaViewSet, UsuarioViewSet, BusquedaViewSet, ProductoViewSet,TallaViewSet,ColorViewSet,NotaIngresoViewSet,NotaVentaViewSet, DetalleNotaVentaViewSet,PermisoViewSet, RolViewSet, UsuarioViewSet
 
 # Crear un router y registrar las rutas
 router = DefaultRouter()
 router.register('categorias', CategoriaViewSet, basename='categoria')
 router.register('categorias-colores', CategoriaColorViewSet, basename='categoriacolor')
 router.register('marcas', MarcaViewSet, basename='marca')
-router.register('usuarios', UsuarioViewSet, basename='usuario')
 router.register('busquedas', BusquedaViewSet, basename='busqueda')
 router.register('productos', ProductoViewSet, basename='producto')
 router.register('tallas', TallaViewSet, basename='talla')
 router.register('colores', ColorViewSet, basename='color')
 router.register('notas-ingreso', NotaIngresoViewSet, basename='notaingreso')
+router.register('notas-venta', NotaVentaViewSet, basename='notaventa')
+router.register('detalles-venta', DetalleNotaVentaViewSet, basename='detalleventa')
+router.register('permisos', PermisoViewSet, basename='permiso')
+router.register('roles', RolViewSet, basename='rol')
+router.register('usuarios', UsuarioViewSet, basename='usuario')
 
 # Incluir las rutas en el módulo
 urlpatterns = [

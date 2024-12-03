@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Categoria, CategoriaColor, Marca, Usuario, Busqueda,NotaIngreso, DetalleNotaIngreso, Producto, Talla, Color
+from .models import Categoria, CategoriaColor, Marca, Usuario, Busqueda,NotaIngreso, DetalleNotaIngreso, Producto, Talla, Color,NotaVenta, DetalleNotaVenta,Rol, Permiso, Usuario
 
 # Serializador para Categoría
 class CategoriaSerializer(serializers.ModelSerializer):
@@ -70,3 +70,37 @@ class NotaIngresoSerializer(serializers.ModelSerializer):
         for detalle_data in detalles_data:
             DetalleNotaIngreso.objects.create(nota_ingreso=nota_ingreso, **detalle_data)
         return nota_ingreso
+    
+# Serializador para Nota de Venta
+class NotaVentaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NotaVenta
+        fields = '__all__'
+
+# Serializador para Detalle de Nota de Venta
+class DetalleNotaVentaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DetalleNotaVenta
+        fields = '__all__'
+
+# Serializador para Permiso
+class PermisoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permiso
+        fields = '__all__'
+
+# Serializador para Rol
+class RolSerializer(serializers.ModelSerializer):
+    permisos = PermisoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Rol
+        fields = '__all__'
+
+# Serializador para Usuario
+class UsuarioSerializer(serializers.ModelSerializer):
+    roles = RolSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Usuario
+        fields = ['id', 'nombre', 'email', 'fecha_registro', 'roles']

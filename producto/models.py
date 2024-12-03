@@ -1,18 +1,38 @@
 from django.db import models
 from django.db.models.signals import pre_save,post_save
 from django.dispatch import receiver
+from django.core.exceptions import ValidationError
+from django.contrib.auth.models import AbstractUser
 
-
-# Modelo Usuario
-class Usuario(models.Model):
-    nombre = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
-    fecha_registro = models.DateTimeField(auto_now_add=True)
+# Modelo Rol
+class Rol(models.Model):
+    nombre = models.CharField(max_length=100, unique=True)
+    descripcion = models.TextField(blank=True, null=True)
+    permisos = models.ManyToManyField('Permiso', related_name='roles', blank=True)
 
     def __str__(self):
         return self.nombre
 
 
+# Modelo Permiso
+class Permiso(models.Model):
+    nombre = models.CharField(max_length=100, unique=True)
+    descripcion = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre
+
+
+# Actualizar Usuario para soportar roles
+class Usuario(models.Model):
+    nombre = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    fecha_registro = models.DateTimeField(auto_now_add=True)
+    roles = models.ManyToManyField(Rol, related_name='usuarios', blank=True)
+
+    def __str__(self):
+        return self.nombre
+    
 # Modelo Categoria
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
@@ -136,3 +156,35 @@ def actualizar_stock(sender, instance, created, **kwargs):
         producto = instance.producto
         producto.stock += instance.cantidad
         producto.save()
+
+# Modelo Nota de Venta
+class NotaVenta(models.Model):
+    observacion = models.TextField(blank=True, null=True)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Nota de Venta #{self.id} - {self.fecha}"
+
+
+# Modelo Detalle de Nota de Venta
+class DetalleNotaVenta(models.Model):
+    nota_venta = models.ForeignKey(NotaVenta, on_delete=models.CASCADE, related_name="detalles")
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.cantidad} de {self.producto.nombre}"
+
+    def clean(self):
+        if self.cantidad > self.producto.stock:
+            raise ValidationError(f"No hay suficiente stock para el producto '{self.producto.nombre}'.")
+
+# Señal para descontar stock después de guardar un DetalleNotaVenta
+@receiver(post_save, sender=DetalleNotaVenta)
+def descontar_stock(sender, instance, **kwargs):
+    producto = instance.producto
+    if producto.stock < instance.cantidad:
+        raise ValidationError(f"No hay suficiente stock para el producto '{producto.nombre}'.")
+    producto.stock -= instance.cantidad
+    producto.save()
+
