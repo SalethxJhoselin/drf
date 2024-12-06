@@ -66,15 +66,33 @@ def obtener_recomendaciones(request, usuario_id):
     # Construir JSON de respuesta
     recomendaciones = {
         "exactas": [
-            {"nombre": p.nombre, "categoria": p.categoria.nombre, "precio": p.precio, "popularidad": p.popularidad_reciente}
+            {
+                "nombre": p.nombre,
+                "categoria": p.categoria.nombre,
+                "precio": p.precio,
+                "imagen": p.imagen_url,  # Añadir URL de la imagen
+                "stock": p.stock         # Añadir stock
+            }
             for p in recomendaciones_exactas
         ],
         "flexibles": [
-            {"nombre": p.nombre, "categoria": p.categoria.nombre, "precio": p.precio, "popularidad": p.popularidad_reciente}
+            {
+                "nombre": p.nombre,
+                "categoria": p.categoria.nombre,
+                "precio": p.precio,
+                "imagen": p.imagen_url,  # Añadir URL de la imagen
+                "stock": p.stock         # Añadir stock
+            }
             for p in recomendaciones_flexibles
         ],
         "complementarios": [
-            {"nombre": p.nombre, "categoria": p.categoria.nombre, "precio": p.precio, "popularidad": p.popularidad_reciente}
+            {
+                "nombre": p.nombre,
+                "categoria": p.categoria.nombre,
+                "precio": p.precio,
+                "imagen": p.imagen_url,  # Añadir URL de la imagen
+                "stock": p.stock         # Añadir stock
+            }
             for p in complementarios
         ]
     }
