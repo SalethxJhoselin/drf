@@ -68,6 +68,7 @@ def obtener_recomendaciones(request, usuario_id):
     recomendaciones = {
         "exactas": [
             {
+                "id": p.id,
                 "nombre": p.nombre,
                 "categoria": p.categoria.nombre,
                 "precio": p.precio,
@@ -78,6 +79,7 @@ def obtener_recomendaciones(request, usuario_id):
         ],
         "flexibles": [
             {
+                "id": p.id,
                 "nombre": p.nombre,
                 "categoria": p.categoria.nombre,
                 "precio": p.precio,
@@ -88,6 +90,7 @@ def obtener_recomendaciones(request, usuario_id):
         ],
         "complementarios": [
             {
+                "id": p.id,
                 "nombre": p.nombre,
                 "categoria": p.categoria.nombre,
                 "precio": p.precio,
