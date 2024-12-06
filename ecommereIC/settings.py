@@ -48,9 +48,13 @@ INSTALLED_APPS = [
 AUTH_USER_MODEL = 'producto.Usuario'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # Permitir acceso sin autenticación
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
 }
 
 AUTHENTICATION_BACKENDS = [
@@ -71,10 +75,7 @@ MIDDLEWARE = [
 ]
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',  # URL de tu frontend en desarrollo
-]
-# CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'ecommereIC.urls'
 
