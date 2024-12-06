@@ -1,7 +1,7 @@
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 from . import views
-from .auth_views import RegistroUsuarioView  # Importar la vista de registro
+from .auth_views import RegistroUsuarioView,LoginView  # Importar la vista de registro
 from .api import (
     CategoriaViewSet, CategoriaColorViewSet, MarcaViewSet, BusquedaViewSet, ProductoViewSet,
     TallaViewSet, ColorViewSet, NotaIngresoViewSet, NotaVentaViewSet, DetalleNotaVentaViewSet,
@@ -29,4 +29,5 @@ urlpatterns = [
     path('', include(router.urls)),  # Incluye todas las rutas generadas automáticamente
     path('recomendaciones/<int:usuario_id>/', views.obtener_recomendaciones, name='obtener_recomendaciones'),
     path('auth/registro/', RegistroUsuarioView.as_view(), name='registro_usuario'),  # Ruta para el registro
+    path('auth/login/', LoginView.as_view(), name='login_usuario'),
 ]

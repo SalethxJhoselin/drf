@@ -44,11 +44,19 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
 ]
 
+# Personal user model configuration
+AUTH_USER_MODEL = 'producto.Usuario'
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
+
+AUTHENTICATION_BACKENDS = [
+    'producto.backends.EmailAuthBackend',  # Backend personalizado
+    'django.contrib.auth.backends.ModelBackend',  # Backend por defecto de Django
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,7 +74,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',  # URL de tu frontend en desarrollo
 ]
-#CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'ecommereIC.urls'
 
