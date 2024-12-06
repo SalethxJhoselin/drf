@@ -83,13 +83,13 @@ class DetalleNotaVentaViewSet(viewsets.ModelViewSet):
 # ViewSet para Permiso
 class PermisoViewSet(viewsets.ModelViewSet):
     queryset = Permiso.objects.all()
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.AllowAny]
     serializer_class = PermisoSerializer
 
 # ViewSet para Rol
 class RolViewSet(viewsets.ModelViewSet):
     queryset = Rol.objects.all()
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.AllowAny]
     serializer_class = RolSerializer
 
 # ViewSet para Usuario
@@ -98,7 +98,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = UsuarioSerializer
 
-    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAdminUser])
+    @action(detail=True, methods=['post'], permission_classes=[permissions.AllowAny])
     def asignar_rol(self, request, pk=None):
         usuario = self.get_object()
         rol_id = request.data.get('rol_id')

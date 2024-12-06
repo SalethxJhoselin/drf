@@ -19,12 +19,6 @@ class MarcaSerializer(serializers.ModelSerializer):
         model = Marca
         fields = '__all__'
 
-# Serializador para Usuario
-class UsuarioSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Usuario
-        fields = '__all__'
-
 # Serializador para Búsqueda
 class BusquedaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -104,8 +98,15 @@ class RolSerializer(serializers.ModelSerializer):
 
 # Serializador para Usuario
 class UsuarioSerializer(serializers.ModelSerializer):
-    roles = RolSerializer(many=True, read_only=True)
-
     class Meta:
         model = Usuario
-        fields = ['id', 'nombre', 'email', 'fecha_registro', 'roles']
+        fields = ['id', 'nombre', 'email', 'password', 'roles']  # Incluye password
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        usuario = super().create(validated_data)
+        if password:
+            usuario.set_password(password)  # Encripta la contraseña
+            usuario.save()
+        return usuario
