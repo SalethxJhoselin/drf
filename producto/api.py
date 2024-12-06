@@ -114,13 +114,22 @@ class UsuarioViewSet(viewsets.ModelViewSet):
     serializer_class = UsuarioSerializer
 
     @action(detail=True, methods=['post'], permission_classes=[permissions.AllowAny])
-    def asignar_rol(self, request, pk=None):
-        usuario = self.get_object()
-        rol_id = request.data.get('rol_id')
+    def actualizar_roles(self, request, pk=None):
+        usuario = self.get_object()  # Obtiene el usuario correspondiente al `pk` en la URL
+        rol_ids = request.data.get('rol_ids', [])  # Obtiene una lista de IDs de roles desde el cuerpo de la solicitud
 
         try:
-            rol = Rol.objects.get(id=rol_id)
-            usuario.roles.add(rol)
-            return Response({"message": "Rol asignado con éxito."}, status=status.HTTP_200_OK)
-        except Rol.DoesNotExist:
-            return Response({"error": "El rol no existe."}, status=status.HTTP_400_BAD_REQUEST)
+            # Busca los roles que coincidan con los IDs proporcionados
+            roles = Rol.objects.filter(id__in=rol_ids)
+            if len(roles) != len(rol_ids):
+                return Response({"error": "Uno o más roles no existen."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Actualiza los roles del usuario: elimina los roles que no están en la lista y agrega los nuevos
+            usuario.roles.set(roles)  # `set()` reemplaza todas las relaciones existentes con las nuevas
+
+            return Response({
+                "message": "Roles actualizados con éxito.",
+                "roles_actualizados": [rol.id for rol in roles]  # Opcional: Devolver los IDs de los roles actualizados
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
