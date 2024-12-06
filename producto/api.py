@@ -13,11 +13,11 @@ from .serializers import (
     NotaVentaSerializer, 
     DetalleNotaVentaSerializer,
     RolSerializer, 
-    PermisoSerializer, 
-    UsuarioSerializer
+    PermisoSerializer 
 )
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import status
 
 # ViewSet para Categoría
 class CategoriaViewSet(viewsets.ModelViewSet):
@@ -37,11 +37,6 @@ class MarcaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = MarcaSerializer
 
-# ViewSet para Usuario
-class UsuarioViewSet(viewsets.ModelViewSet):
-    queryset = Usuario.objects.all()
-    permission_classes = [permissions.AllowAny]
-    serializer_class = UsuarioSerializer
 
 # ViewSet para Búsqueda
 class BusquedaViewSet(viewsets.ModelViewSet):
