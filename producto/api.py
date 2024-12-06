@@ -71,8 +71,35 @@ class NotaIngresoViewSet(viewsets.ModelViewSet):
 # ViewSet para Nota de Venta
 class NotaVentaViewSet(viewsets.ModelViewSet):
     queryset = NotaVenta.objects.all()
-    permission_classes = [permissions.AllowAny]
     serializer_class = NotaVentaSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        detalles_data = data.pop('detalles', [])
+        
+        # Crear la nota de venta
+        nota_venta = NotaVenta.objects.create(**data)
+
+        # Crear los detalles de la nota de venta
+        for detalle in detalles_data:
+            producto_id = detalle.get('producto')
+            cantidad = detalle.get('cantidad')
+            producto = Producto.objects.get(id=producto_id)
+
+            # Validar el stock
+            if cantidad > producto.stock:
+                return Response(
+                    {"error": f"No hay suficiente stock para {producto.nombre}."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Crear el detalle y descontar el stock
+            DetalleNotaVenta.objects.create(nota_venta=nota_venta, producto=producto, cantidad=cantidad)
+            producto.stock -= cantidad
+            producto.save()
+
+        serializer = NotaVentaSerializer(nota_venta)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 # ViewSet para Detalle de Nota de Venta
 class DetalleNotaVentaViewSet(viewsets.ModelViewSet):
