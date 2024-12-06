@@ -92,6 +92,21 @@ class RolViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
     serializer_class = RolSerializer
 
+    @action(detail=True, methods=['post'], permission_classes=[permissions.AllowAny])
+    def asignar_permisos(self, request, pk=None):
+        try:
+            rol = self.get_object()  # Obtiene el rol según el ID en la URL
+            permisos_ids = request.data.get('permisos', [])
+            permisos = Permiso.objects.filter(id__in=permisos_ids)
+
+            # Asignar permisos al rol
+            rol.permisos.set(permisos)
+            rol.save()
+
+            return Response({'message': 'Permisos asignados con éxito'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 # ViewSet para Usuario
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()

@@ -90,12 +90,12 @@ class PermisoSerializer(serializers.ModelSerializer):
 
 # Serializador para Rol
 class RolSerializer(serializers.ModelSerializer):
-    permisos = PermisoSerializer(many=True, read_only=True)
+    permisos = serializers.PrimaryKeyRelatedField(many=True, queryset=Permiso.objects.all())
 
     class Meta:
         model = Rol
         fields = '__all__'
-
+        
 # Serializador para Usuario
 class UsuarioSerializer(serializers.ModelSerializer):
     class Meta:
